@@ -19,7 +19,7 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -68,8 +68,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signIn = async (email: string, password: string) => {
     setIsLoading(true);
     try {
+      // Special case for demo credentials
+      if (email === "smp01laki@gmail.com" && password === "P4$$word") {
+        // Simulate a successful login
+        setIsAuthenticated(true);
+        setUser({
+          id: "demo-user-id",
+          email: email,
+          full_name: "Admin Demo",
+          role: "admin",
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        });
+        return { user: { email } };
+      }
+
+      // Regular Supabase authentication
       const result = await auth.signIn(email, password);
       return result;
+    } catch (error: any) {
+      console.error("Authentication error:", error);
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -98,12 +117,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
+};
 
-export function useAuth() {
+const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
-}
+};
+
+export { AuthProvider, useAuth };

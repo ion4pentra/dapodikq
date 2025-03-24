@@ -49,13 +49,27 @@ const LoginForm = ({ onSuccess, className }: LoginFormProps = {}) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "smp01laki@gmail.com",
-      password: "P4$word",
+      password: "P4$$word",
     },
   });
 
   const onSubmit = async (data: FormValues) => {
     setError(null);
     try {
+      // For demo purposes, hardcoded credentials check
+      if (data.email === "smp01laki@gmail.com" && data.password === "P4$word") {
+        // Simulate successful login
+        await signIn(data.email, data.password);
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          const from = location.state?.from?.pathname || "/dashboard";
+          navigate(from, { replace: true });
+        }
+        return;
+      }
+
+      // Try regular Supabase auth if not using demo credentials
       await signIn(data.email, data.password);
       if (onSuccess) {
         onSuccess();

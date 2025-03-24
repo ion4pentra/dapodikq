@@ -32,8 +32,8 @@ const StudentFilters = ({
   onSearch = () => {},
 }: StudentFiltersProps) => {
   const [filters, setFilters] = useState<FilterState>({
-    class: "",
-    grade: "",
+    class: "all",
+    grade: "all",
     status: [],
     searchQuery: "",
   });
@@ -66,7 +66,11 @@ const StudentFilters = ({
   };
 
   const updateActiveFilters = (key: keyof FilterState, value: any) => {
-    if (!value || (Array.isArray(value) && value.length === 0)) {
+    if (
+      (!value && value !== "all") ||
+      (Array.isArray(value) && value.length === 0) ||
+      value === "all"
+    ) {
       setActiveFilters((prev) =>
         prev.filter((filter) => !filter.startsWith(key)),
       );
@@ -116,16 +120,16 @@ const StudentFilters = ({
 
   const clearAllFilters = () => {
     setFilters({
-      class: "",
-      grade: "",
+      class: "all",
+      grade: "all",
       status: [],
       searchQuery: "",
     });
     setSearchQuery("");
     setActiveFilters([]);
     onFilterChange({
-      class: "",
-      grade: "",
+      class: "all",
+      grade: "all",
       status: [],
       searchQuery: "",
     });
@@ -167,7 +171,7 @@ const StudentFilters = ({
               <SelectValue placeholder="Kelas" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Semua Kelas</SelectItem>
+              <SelectItem value="all">Semua Kelas</SelectItem>
               <SelectItem value="1A">1A</SelectItem>
               <SelectItem value="1B">1B</SelectItem>
               <SelectItem value="2A">2A</SelectItem>
@@ -188,7 +192,7 @@ const StudentFilters = ({
               <SelectValue placeholder="Tingkat" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Semua Tingkat</SelectItem>
+              <SelectItem value="all">Semua Tingkat</SelectItem>
               <SelectItem value="1">Kelas 1</SelectItem>
               <SelectItem value="2">Kelas 2</SelectItem>
               <SelectItem value="3">Kelas 3</SelectItem>

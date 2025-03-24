@@ -81,60 +81,66 @@ const AttendanceChart = ({
         </div>
       </CardHeader>
       <CardContent>
-        <TabsContent value="weekly" className="mt-0">
-          <div className="h-[300px] w-full">
-            <div className="flex h-[250px] items-end justify-between gap-2 pt-6">
-              {data.map((day, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <div className="relative flex w-full flex-col items-center">
-                    <div
-                      className="w-12 bg-primary rounded-t-md transition-all duration-300 ease-in-out"
-                      style={{
-                        height: `${(day.percentage / 100) * 200}px`,
-                        backgroundColor:
-                          day.percentage > 90
-                            ? "#10b981"
-                            : day.percentage > 80
-                              ? "#f59e0b"
-                              : "#ef4444",
-                      }}
-                    />
-                    <span className="absolute -top-6 text-xs font-medium">
-                      {day.percentage}%
-                    </span>
+        <Tabs
+          value={view}
+          onValueChange={(v) => setView(v as "weekly" | "monthly")}
+        >
+          <TabsContent value="weekly" className="mt-0">
+            <div className="h-[300px] w-full">
+              <div className="flex h-[250px] items-end justify-between gap-2 pt-6">
+                {data.map((day, index) => (
+                  <div key={index} className="flex flex-col items-center">
+                    <div className="relative flex w-full flex-col items-center">
+                      <div
+                        className="w-12 bg-primary rounded-t-md transition-all duration-300 ease-in-out"
+                        style={{
+                          height: `${(day.percentage / 100) * 200}px`,
+                          backgroundColor:
+                            day.percentage > 90
+                              ? "#10b981"
+                              : day.percentage > 80
+                                ? "#f59e0b"
+                                : "#ef4444",
+                        }}
+                      />
+                      <span className="absolute -top-6 text-xs font-medium">
+                        {day.percentage}%
+                      </span>
+                    </div>
+                    <span className="mt-2 text-sm">{day.date}</span>
                   </div>
-                  <span className="mt-2 text-sm">{day.date}</span>
+                ))}
+              </div>
+              <div className="mt-4 flex justify-between text-sm text-muted-foreground">
+                <div className="flex items-center">
+                  <div className="mr-1 h-3 w-3 rounded-full bg-green-500" />
+                  <span>
+                    Hadir: {data.reduce((acc, day) => acc + day.present, 0)}{" "}
+                    siswa
+                  </span>
                 </div>
-              ))}
-            </div>
-            <div className="mt-4 flex justify-between text-sm text-muted-foreground">
-              <div className="flex items-center">
-                <div className="mr-1 h-3 w-3 rounded-full bg-green-500" />
-                <span>
-                  Hadir: {data.reduce((acc, day) => acc + day.present, 0)} siswa
-                </span>
-              </div>
-              <div className="flex items-center">
-                <div className="mr-1 h-3 w-3 rounded-full bg-red-500" />
-                <span>
-                  Tidak Hadir: {data.reduce((acc, day) => acc + day.absent, 0)}{" "}
-                  siswa
-                </span>
-              </div>
-              <div className="flex items-center">
-                <div className="mr-1 h-3 w-3 rounded-full bg-gray-300" />
-                <span>Total: {data[0]?.total || 0} siswa</span>
+                <div className="flex items-center">
+                  <div className="mr-1 h-3 w-3 rounded-full bg-red-500" />
+                  <span>
+                    Tidak Hadir:{" "}
+                    {data.reduce((acc, day) => acc + day.absent, 0)} siswa
+                  </span>
+                </div>
+                <div className="flex items-center">
+                  <div className="mr-1 h-3 w-3 rounded-full bg-gray-300" />
+                  <span>Total: {data[0]?.total || 0} siswa</span>
+                </div>
               </div>
             </div>
-          </div>
-        </TabsContent>
-        <TabsContent value="monthly" className="mt-0">
-          <div className="flex h-[300px] items-center justify-center">
-            <p className="text-muted-foreground">
-              Data bulanan akan ditampilkan di sini.
-            </p>
-          </div>
-        </TabsContent>
+          </TabsContent>
+          <TabsContent value="monthly" className="mt-0">
+            <div className="flex h-[300px] items-center justify-center">
+              <p className="text-muted-foreground">
+                Data bulanan akan ditampilkan di sini.
+              </p>
+            </div>
+          </TabsContent>
+        </Tabs>
       </CardContent>
     </Card>
   );
